@@ -6,12 +6,14 @@ public class MovimientoPlayer : MonoBehaviour
 {
     public float tolInput;
     public float velCaminado;
-    public float poderSalto;
+    public AnimationCurve poderSalto;
     public float fuerzaEnAire;
     public float resistenciaAire;
     private bool _sobreElPiso;
     private Rigidbody2D _cuerpo;
     private bool _estaSaltando;
+    private bool _verticalPresionado;
+    private float _saltoCount;
 
     void Start()
     {
@@ -27,10 +29,11 @@ public class MovimientoPlayer : MonoBehaviour
     {
     }
 
-    void OnTriggerEnter2D()
+    void OnTriggerStay2D()
     {
         _sobreElPiso = true;
         _estaSaltando = false;
+        _saltoCount = 0;
     }
 
     void OnTriggerExit2D()
@@ -44,16 +47,19 @@ public class MovimientoPlayer : MonoBehaviour
         {
             if(Input.GetAxis("Vertical") > 0 && !_estaSaltando)
             {
-                Debug.Log("Saltar");
                 _estaSaltando = true;
-                var horizontal = Vector2.right * Input.GetAxis("Horizontal") * velCaminado;
-                var vertical = Vector2.up * poderSalto;
+                var horizontal = Vector2.right * Input.GetAxis("Horizontal") * velCaminado * Time.deltaTime;
+                var vertical = Vector2.up * PoderSalto();
                 _cuerpo.velocity = vertical + horizontal;
             }
-            else if(Mathf.Abs(Input.GetAxis("Horizontal")) > tolInput && !_estaSaltando)
+            else if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) > tolInput && !_estaSaltando)
             {
-                var deltaX = velCaminado * Vector2.right * Mathf.Sign(Input.GetAxis("Horizontal"));
-                _cuerpo.MovePosition( _cuerpo.position + deltaX * Time.deltaTime );
+                var velX = velCaminado * Vector2.right * Mathf.Sign(Input.GetAxis("Horizontal"));
+                _cuerpo.velocity = velX * Time.deltaTime;
+            }
+            else if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 0)
+            {
+                _cuerpo.velocity = new Vector2(0, _cuerpo.velocity.y);
             }
         }
         else    // mientras este en el aire.
@@ -61,7 +67,8 @@ public class MovimientoPlayer : MonoBehaviour
             var fuerzaExtraAire = Vector2.zero;
             if(Input.GetAxis("Vertical") > tolInput && _estaSaltando)
             {
-                fuerzaExtraAire += VelocidadVerticalExtra();
+                _saltoCount += Time.deltaTime;
+                fuerzaExtraAire += Vector2.up * PoderSalto();
             }
             if(Mathf.Abs(Input.GetAxis("Horizontal")) > tolInput && _estaSaltando)
             {
@@ -69,13 +76,47 @@ public class MovimientoPlayer : MonoBehaviour
                 fuerzaExtraAire += horizontal;
             }
             _cuerpo.AddForce(fuerzaExtraAire);
-            var velHorizontalAire = -_cuerpo.velocity.x * resistenciaAire;
-            _cuerpo.velocity += velHorizontalAire * Vector2.right;
+
+            if(Input.GetAxis("Horizontal") == 0)
+            {
+                var velHorizontalAire = -_cuerpo.velocity.x * resistenciaAire;
+                _cuerpo.velocity += velHorizontalAire * Vector2.right;
+            }
         }
+
+        CalcularFlip();
     }
 
-    private Vector2 VelocidadVerticalExtra()
+    private float PoderSalto()
     {
-        return Vector3.zero;
+        var valor = poderSalto.Evaluate(_saltoCount);
+        _saltoCount += Time.deltaTime;
+        return valor;
+    }
+
+    private void CalcularFlip()
+    {
+        if(_sobreElPiso)
+        {
+            if(Input.GetAxisRaw("Horizontal") != 0)
+            {
+                var localScale = transform.localScale;
+                localScale.x = Mathf.Abs(localScale.x) * Input.GetAxisRaw("Horizontal");
+                transform.localScale = localScale;
+            }
+        }
+        else
+        {
+            var localScale = transform.localScale;
+            if(_cuerpo.velocity.x > 0)
+            {
+                localScale.x = Mathf.Abs(localScale.x);
+            }
+            else if(_cuerpo.velocity.x < 0)
+            {
+                localScale.x = -Mathf.Abs(localScale.x);
+            }
+            transform.localScale = localScale;
+        }
     }
 }
