@@ -5,7 +5,8 @@
 [Oo]bj/
 [Bb]uild
 /[Bb]uilds/
-/[Ll]ibrary/
+/Library/
+Library/
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*

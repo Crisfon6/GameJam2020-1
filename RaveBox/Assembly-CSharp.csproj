@@ -57,7 +57,7 @@
      <Compile Include="Assets\src\entorno\piñones.cs" />
      <Compile Include="Assets\src\entorno\Teleport.cs" />
      <Compile Include="Assets\src\index.cs" />
-     <Compile Include="Assets\src\personaje\movimiento.cs" />
+     <Compile Include="Assets\src\personaje\MovimientoPlayer.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>D:/GameJam/RaveBox/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>

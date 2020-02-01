@@ -5,6 +5,7 @@ using UnityEngine;
 public class index : MonoBehaviour
 {
     int intentos=0;
+    float points =0;
     // Start is called before the first frame update
     void Start()
     {
