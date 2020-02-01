@@ -53,11 +53,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\src\canvas.cs" />
      <Compile Include="Assets\src\entorno\movePlataform.cs" />
      <Compile Include="Assets\src\entorno\piñones.cs" />
      <Compile Include="Assets\src\entorno\Teleport.cs" />
      <Compile Include="Assets\src\index.cs" />
      <Compile Include="Assets\src\personaje\MovimientoPlayer.cs" />
+     <Compile Include="Assets\trampas.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>D:/GameJam/RaveBox/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
