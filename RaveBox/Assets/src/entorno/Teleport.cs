@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Teleport : MonoBehaviour
 {
+    float x= 20;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,9 +18,8 @@ public class Teleport : MonoBehaviour
     }
      void OnTriggerEnter2D(Collider2D objetoChoca)
     {
-        Debug.Log(objetoChoca);
-        Debug.Log((objetoChoca.transform.position.x));
-        objetoChoca.transform.Translate(objetoChoca.transform.position.x+20,0,0);
+       
+        objetoChoca.transform.Translate(x,0,0);
         Debug.Log("Entro");
         
         
