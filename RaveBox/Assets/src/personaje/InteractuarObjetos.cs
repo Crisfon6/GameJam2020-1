@@ -7,16 +7,22 @@ public class InteractuarObjetos : MonoBehaviour
     public Transform posicionObjetoCogido;
     public Transform posicionSoltarObjeto;
     public float esperaSoltandoObjeto;
-    private GameObject objetoCogido;
+    private GameObject _objetoCogido;
     private Transform _padreInicialObjeto;
     private bool _soltandoObjeto;
     private bool _botonPresionado;
+    private Vector2 _posicionInicial;
+
+    void Start()
+    {
+        _posicionInicial = transform.position;
+    }
 
     void OnTriggerStay2D(Collider2D other)
     {
         if(other.tag == "Figura")
         {
-            if(Input.GetAxisRaw("Vertical") < 0 && objetoCogido == null && !_botonPresionado)
+            if(Input.GetAxisRaw("Vertical") < 0 && _objetoCogido == null && !_botonPresionado)
             {
                 CogerObjecto(other.gameObject);
                 _botonPresionado = true;
@@ -26,20 +32,20 @@ public class InteractuarObjetos : MonoBehaviour
 
     private void CogerObjecto(GameObject objeto)
     {
-        objetoCogido = objeto;
-        var col = objetoCogido.GetComponent<Collider2D>();
+        _objetoCogido = objeto;
+        var col = _objetoCogido.GetComponent<Collider2D>();
         col.enabled = false;
-        var cuerpo = objetoCogido.GetComponent<Rigidbody2D>();
+        var cuerpo = _objetoCogido.GetComponent<Rigidbody2D>();
         cuerpo.simulated = false;
-        objetoCogido.transform.position = posicionObjetoCogido.position;
-        _padreInicialObjeto = objetoCogido.transform.parent;
-        objetoCogido.transform.parent = transform;
+        _objetoCogido.transform.position = posicionObjetoCogido.position;
+        _padreInicialObjeto = _objetoCogido.transform.parent;
+        _objetoCogido.transform.parent = transform;
     }
 
     void Update()
     {
         var verticalAxis = Input.GetAxisRaw("Vertical");
-        if(verticalAxis < 0 && objetoCogido != null && !_soltandoObjeto && !_botonPresionado)
+        if(verticalAxis < 0 && _objetoCogido != null && !_soltandoObjeto && !_botonPresionado)
         {
             SoltarObjetoCogido();
             _botonPresionado = true;
@@ -52,14 +58,14 @@ public class InteractuarObjetos : MonoBehaviour
 
     private void SoltarObjetoCogido()
     {
-        objetoCogido.transform.parent = _padreInicialObjeto;
-        objetoCogido.transform.position = posicionSoltarObjeto.position;
-        var col = objetoCogido.GetComponent<Collider2D>();
+        _objetoCogido.transform.parent = _padreInicialObjeto;
+        _objetoCogido.transform.position = posicionSoltarObjeto.position;
+        var col = _objetoCogido.GetComponent<Collider2D>();
         col.enabled = true; 
-        var cuerpo = objetoCogido.GetComponent<Rigidbody2D>();
+        var cuerpo = _objetoCogido.GetComponent<Rigidbody2D>();
         cuerpo.simulated = true;
         cuerpo.velocity = Vector3.zero;
-        objetoCogido = null;
+        _objetoCogido = null;
         _soltandoObjeto = true;
         Invoke("ResetearSoltandoObjeto", esperaSoltandoObjeto);
     }
@@ -67,5 +73,20 @@ public class InteractuarObjetos : MonoBehaviour
     private void ResetearSoltandoObjeto()
     {
         _soltandoObjeto = false;
+    }
+
+    public void Reiniciar()
+    {
+        if(_objetoCogido != null)
+        {
+            var figura = _objetoCogido.GetComponent<Figura>();
+            figura.RestablecerPosicionInicial();
+            _objetoCogido = null;
+        }
+
+        transform.position = _posicionInicial;
+        var cuerpo = GetComponent<Rigidbody2D>();
+        cuerpo.velocity = Vector3.zero;
+        cuerpo.MovePosition(_posicionInicial);
     }
 }
