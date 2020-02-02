@@ -11,7 +11,7 @@ public class InteractuarObjetos : MonoBehaviour
     private Transform _padreInicialObjeto;
     private bool _soltandoObjeto;
     private bool _botonPresionado;
-    private Vector2 _posicionInicial;
+    private Vector3 _posicionInicial;
 
     void Start()
     {

@@ -4,29 +4,14 @@ using UnityEngine;
 
 public class Teleport : MonoBehaviour
 {
-    float x= 20;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float x;
+    public float y;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
      void OnTriggerEnter2D(Collider2D objetoChoca)
     {
-       
-        objetoChoca.transform.Translate(x,0,0);
-        Debug.Log("Entro");
-        
-        
-        
+        if(objetoChoca.tag == "Figura")
+        {
+            objetoChoca.transform.Translate(x, y, 0);
+        }
     }
-/*    private void OnTriggerExit2D(Collider2 other)
-    {
-       Debug.Log("Entro");
-    }*/
 }
