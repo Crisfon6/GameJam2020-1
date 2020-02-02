@@ -54,10 +54,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\src\canvas.cs" />
+     <Compile Include="Assets\src\entorno\ConectorDeFigura.cs" />
+     <Compile Include="Assets\src\entorno\Figura.cs" />
      <Compile Include="Assets\src\entorno\movePlataform.cs" />
      <Compile Include="Assets\src\entorno\piñones.cs" />
      <Compile Include="Assets\src\entorno\Teleport.cs" />
      <Compile Include="Assets\src\index.cs" />
+     <Compile Include="Assets\src\personaje\InteractuarObjetos.cs" />
      <Compile Include="Assets\src\personaje\MovimientoPlayer.cs" />
      <Compile Include="Assets\trampas.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
