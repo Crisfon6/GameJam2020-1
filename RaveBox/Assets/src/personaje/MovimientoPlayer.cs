@@ -14,7 +14,7 @@ public class MovimientoPlayer : MonoBehaviour
     private bool _estaSaltando;
     private bool _verticalPresionado;
     private float _saltoCount;
-//public Animator animator;
+public Animator animator;
     float horizontalMove = 0f;
     void Start()
     {
@@ -42,19 +42,19 @@ public class MovimientoPlayer : MonoBehaviour
         _sobreElPiso = false;
     }
     void OnLanding(){
-       // animator.SetBool("IsJumping",false);
+        animator.SetBool("IsJumping",false);
     }
 
     void Update()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal")*40f;
-        //animator.SetFloat("Speed",Mathf.Abs(horizontalMove));
+        animator.SetFloat("Speed",Mathf.Abs(horizontalMove));
         if(_sobreElPiso)    // mientras este en contacto con el suelo.
         {
             if(Input.GetAxis("Vertical") > 0 && !_estaSaltando)
             {
                 _estaSaltando = true;
-                //animator.SetBool("IsJumping",true);
+                animator.SetBool("IsJumping",true);
                 var horizontal = Vector2.right * Input.GetAxis("Horizontal") * velCaminado * Time.deltaTime;
                 var vertical = Vector2.up * PoderSalto();
                 _cuerpo.velocity = vertical + horizontal;
