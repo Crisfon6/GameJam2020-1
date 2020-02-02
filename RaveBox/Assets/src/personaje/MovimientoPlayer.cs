@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MovimientoPlayer : MonoBehaviour
 {
+    public string horizontalAxis;
+    public string verticalAxis;
     public float tolInput;
     public float velCaminado;
     public AnimationCurve poderSalto;
@@ -14,7 +16,7 @@ public class MovimientoPlayer : MonoBehaviour
     private bool _estaSaltando;
     private bool _verticalPresionado;
     private float _saltoCount;
-public Animator animator;
+    public Animator animator;
     float horizontalMove = 0f;
     void Start()
     {
@@ -42,29 +44,39 @@ public Animator animator;
         _sobreElPiso = false;
     }
     void OnLanding(){
-        animator.SetBool("IsJumping",false);
+       animator.SetBool("IsJumping",false);
     }
 
     void Update()
     {
+        var valHorizontalAxis = Input.GetAxis("Horizontal");
+        var valVerticalAxis = Input.GetAxis("Vertical");
         horizontalMove = Input.GetAxisRaw("Horizontal")*40f;
+
+
         animator.SetFloat("Speed",Mathf.Abs(horizontalMove));
+
+
         if(_sobreElPiso)    // mientras este en contacto con el suelo.
         {
-            if(Input.GetAxis("Vertical") > 0 && !_estaSaltando)
+            if(valVerticalAxis > 0 && !_estaSaltando)
             {
                 _estaSaltando = true;
-                animator.SetBool("IsJumping",true);
+
                 var horizontal = Vector2.right * Input.GetAxis("Horizontal") * velCaminado * Time.deltaTime;
+
+                animator.SetBool("IsJumping",true);
+                var horizontal = Vector2.right * valHorizontalAxis * velCaminado * Time.deltaTime;
+
                 var vertical = Vector2.up * PoderSalto();
                 _cuerpo.velocity = vertical + horizontal;
             }
-            else if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) > tolInput && !_estaSaltando)
+            else if(Mathf.Abs(valHorizontalAxis) > tolInput && !_estaSaltando)
             {
-                var velX = velCaminado * Vector2.right * Mathf.Sign(Input.GetAxis("Horizontal"));
+                var velX = velCaminado * Vector2.right * Mathf.Sign(valHorizontalAxis);
                 _cuerpo.velocity = velX * Time.deltaTime;
             }
-            else if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 0)
+            else if(Input.GetAxisRaw("Horizontal") == 0)
             {
                 _cuerpo.velocity = new Vector2(0, _cuerpo.velocity.y);
             }
@@ -72,19 +84,19 @@ public Animator animator;
         else    // mientras este en el aire.
         {
             var fuerzaExtraAire = Vector2.zero;
-            if(Input.GetAxis("Vertical") > tolInput && _estaSaltando)
+            if(valVerticalAxis > tolInput && _estaSaltando)
             {
                 _saltoCount += Time.deltaTime;
                 fuerzaExtraAire += Vector2.up * PoderSalto();
             }
-            if(Mathf.Abs(Input.GetAxis("Horizontal")) > tolInput && _estaSaltando)
+            if(Mathf.Abs(valHorizontalAxis) > tolInput && _estaSaltando)
             {
-                var horizontal = Vector2.right * Input.GetAxis("Horizontal") * fuerzaEnAire;
+                var horizontal = Vector2.right * valHorizontalAxis * fuerzaEnAire;
                 fuerzaExtraAire += horizontal;
             }
             _cuerpo.AddForce(fuerzaExtraAire);
 
-            if(Input.GetAxis("Horizontal") == 0)
+            if(valHorizontalAxis == 0)
             {
                 var velHorizontalAire = -_cuerpo.velocity.x * resistenciaAire;
                 _cuerpo.velocity += velHorizontalAire * Vector2.right;

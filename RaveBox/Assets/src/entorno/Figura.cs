@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TipoFigura { TRIANGULO, CUADRADO, CIRCULO, ESTRELLA, OCTAGONO, SHURINKEN };
+public enum TipoFigura { TRIANGULO, CUADRADO, CIRCULO, ESTRELLA, HEXAGONO, SHURINKEN, NO_FUNCIONAL };
 
 public class Figura : MonoBehaviour
 {
