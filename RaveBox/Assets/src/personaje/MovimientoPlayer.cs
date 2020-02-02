@@ -14,7 +14,7 @@ public class MovimientoPlayer : MonoBehaviour
     private bool _estaSaltando;
     private bool _verticalPresionado;
     private float _saltoCount;
-    public Animator animator;
+public Animator animator;
     float horizontalMove = 0f;
     void Start()
     {
